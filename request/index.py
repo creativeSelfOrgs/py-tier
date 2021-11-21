@@ -25,13 +25,13 @@ def post_method():
         'lang': 'en',
         'sortField': 'added_timestamp',
         'sortDirection': 'desc',
-        'perPage': 4,
+        'perPage': 10000,
         'page': 1
     }
 
     data = {
         "rangeFrom": "2021-10-01",
-        "rangeTo": "2021-10-02",
+        "rangeTo": "2021-10-22",
         "columns": "transaction_id,conversion_status,added_timestamp,time_difference,advertiser_id,advertiser,affiliate_id,affiliate,offer_id,offer,goal_id,goal,ip,advertiser_track_id,sub_id1,revenue,payout,profit,currency,click_id,deep_link_url",
         "filters": {
             "statuses": "2"
@@ -39,9 +39,9 @@ def post_method():
     }
 
     response_data_post = requests.post(
-        url + '/network/reports/conversions', params=params_request_post, data=json.dumps(data), headers=headers).json()
-
-    return response_data_post
+        url + '/network/reports/conversions', params=params_request_post, data=json.dumps(data), headers=headers)
+    print(response_data_post.elapsed.total_seconds())
+    return response_data_post.json()
 
 
 def format_json(json_thing, ascii=False, sort=True, indents=4):
@@ -69,8 +69,8 @@ def save_data(data, destination_file='raw.txt', modes='a', obs_to_json_parser=Fa
 
 
 def main():
-    data = format_json(post_method())
-    print(data)
+    data = format_json(post_method(), False, False, 3)
+    # print(data)
     save_data(data, file_path)
 
 
